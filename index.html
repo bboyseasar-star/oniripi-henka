@@ -61,25 +61,27 @@
 
     <main class="quiz-main single">
       <section class="center-panel">
-        <div class="question-card">
-          <p class="question-label" id="question-label">変化の割合を求めなさい</p>
-          <div id="question-display" class="equation-display"></div>
-          <div id="question-extra" class="question-extra"></div>
-        </div>
-
-        <div class="answer-zone">
-          <div class="mf-container" id="mf-container">
-            <math-field id="answer-field" virtual-keyboard-mode="off"></math-field>
+        <div class="main-left">
+          <div class="question-card">
+            <p class="question-label" id="question-label">変化の割合を求めなさい</p>
+            <div id="question-display" class="equation-display"></div>
+            <div id="question-extra" class="question-extra"></div>
           </div>
-          <p class="input-note">※半角で入力してね（分数は <span class="kbd">÷</span> ボタンが便利）</p>
-          <div class="helper-keys">
-            <button class="hkey" data-cmd="frac">a/b 分数</button>
-            <button class="hkey" data-cmd="minus">−</button>
-            <button class="hkey" data-cmd="clear">クリア</button>
-          </div>
-        </div>
 
-        <div id="feedback-box" class="feedback-box hidden"></div>
+          <div class="answer-zone">
+            <div class="mf-container" id="mf-container">
+              <math-field id="answer-field" virtual-keyboard-mode="off"></math-field>
+            </div>
+            <p class="input-note">※半角で入力してね（分数は <span class="kbd">÷</span> ボタンが便利）</p>
+            <div class="helper-keys">
+              <button class="hkey" data-cmd="frac">a/b 分数</button>
+              <button class="hkey" data-cmd="minus">−</button>
+              <button class="hkey" data-cmd="clear">クリア</button>
+            </div>
+          </div>
+
+          <div id="feedback-box" class="feedback-box hidden"></div>
+        </div>
 
         <div class="hint-area">
           <button id="hint-btn" class="btn-hint">💡 ヒント</button>

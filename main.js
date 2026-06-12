@@ -116,9 +116,10 @@ function loadQuestion(){
   $('question-display').innerHTML=q.display;
   $('question-extra').innerHTML=q.extra||'';
   $('feedback-box').className='feedback-box hidden';
-  $('hint-text').className='hint-text hidden';
+  resetHints();
   $('hint-btn').classList.remove('hidden');
   $('hint-btn').textContent='💡 ヒント';
+  $('hint-btn').disabled=false;
   $('submit-btn').classList.remove('hidden');
   $('submit-btn').disabled=false;
   $('next-btn').classList.add('hidden');
@@ -168,22 +169,38 @@ function finishQuestion(ok, userLatex, gaveUp){
 }
 function cleanLatex(s){ return String(s).replace(/\\dfrac/g,'\\frac'); }
 
-/* ヒント（最後＝答え→ギブアップ確定） */
+/* ヒント（積み重ね式・最後＝答え→ギブアップ確定） */
+function resetHints(){
+  const box=$('hint-text');
+  box.innerHTML=''; box.className='hint-text hidden';
+  const main=document.querySelector('.quiz-main');
+  if(main) main.classList.remove('two-col');
+}
+function appendHint(html,stepNo,isAnswer){
+  const box=$('hint-text');
+  box.classList.remove('hidden');
+  const block=document.createElement('div');
+  block.className='hint-step'+(isAnswer?' hint-step--answer':'');
+  const label=isAnswer?'答え':('ステップ'+stepNo);
+  block.innerHTML='<span class="hint-step-no">'+label+'</span>'
+    +'<span class="hint-step-body">'+html+'</span>';
+  box.appendChild(block);
+  const main=document.querySelector('.quiz-main');
+  if(main && box.querySelectorAll('.hint-step').length>=2) main.classList.add('two-col');
+  typeset(box);
+  box.scrollTop=box.scrollHeight;
+}
 $('hint-btn').onclick=()=>{
   if(locked) return;
   const q=session[idx];
   const last = hintStep>=q.hints.length-1;
   if(last){
     if(!confirm('⚠️ 次のヒントは答えだよ！見ると不正解（ギブアップ）になるけど見る？')) return;
-    $('hint-text').innerHTML=q.hints[q.hints.length-1];
-    $('hint-text').classList.remove('hidden');
-    typeset($('hint-text'));
+    appendHint(q.hints[q.hints.length-1], hintStep+1, true);
     finishQuestion(false, mf().getValue?mf().getValue('latex'):mf().value, true);
     return;
   }
-  $('hint-text').innerHTML=q.hints[hintStep];
-  $('hint-text').classList.remove('hidden');
-  typeset($('hint-text'));
+  appendHint(q.hints[hintStep], hintStep+1, false);
   hintStep++;
   if(hintStep>=q.hints.length-1) $('hint-btn').textContent='⚠️ 答えを見る';
 };
