@@ -124,6 +124,7 @@ function loadQuestion(){
   $('submit-btn').disabled=false;
   $('next-btn').classList.add('hidden');
   const f=mf(); f.value=''; setTimeout(()=>{ try{f.focus();}catch(_){} },50);
+  setTimeout(()=>{ try{ if(window.clearMemo) window.clearMemo(); }catch(_){} },80);
   typeset(screens.quiz);
 }
 
@@ -192,12 +193,13 @@ function appendHint(html,stepNo,isAnswer){
   typeset(box);
   box.scrollTop=box.scrollHeight;
 }
-$('hint-btn').onclick=()=>{
+$('hint-btn').onclick=async()=>{
   if(locked) return;
   const q=session[idx];
   const last = hintStep>=q.hints.length-1;
   if(last){
-    if(!confirm('⚠️ 次のヒントは答えだよ！見ると不正解（ギブアップ）になるけど見る？')) return;
+    if(!(await showConfirm({title:'答えを見る？',message:'次のヒントは答えだよ！見ると不正解（ギブアップ）になります。',okText:'見る',danger:true}))) return;
+    if(locked) return;
     appendHint(q.hints[q.hints.length-1], hintStep+1, true);
     finishQuestion(false, mf().getValue?mf().getValue('latex'):mf().value, true);
     return;
@@ -255,7 +257,7 @@ function burst(){
 }
 
 /* ===== ボタン ===== */
-$('quit-btn').onclick=()=>{ if(confirm('ホームに戻る？（いまのチャレンジは記録されません）')){ renderHome(); show('start'); } };
+$('quit-btn').onclick=()=>{ showConfirm({title:'ホームに戻る？',message:'いまのチャレンジは記録されません。',okText:'戻る'}).then(ok=>{ if(ok){ renderHome(); show('start'); } }); };
 $('submit-btn').onclick=submit;
 mf().addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); if(!locked) submit(); } });
 $('start-btn').onclick=()=>startGame(false);
@@ -268,11 +270,51 @@ $('review-wrong-btn').onclick=()=>{
   $('level-tag').textContent='復習';
   show('quiz'); loadQuestion();
 };
-$('reset-btn').onclick=()=>{ if(confirm('学習履歴と最高スコアを消すよ。いい？')){ store.del(STORE_KEY); renderHome(); } };
+$('reset-btn').onclick=()=>{ showConfirm({title:'履歴を消す？',message:'学習履歴と最高スコアを消すよ。',okText:'消す',danger:true}).then(ok=>{ if(ok){ store.del(STORE_KEY); renderHome(); } }); };
+
+/* ===== 確認モーダル（confirm 置換） ===== */
+function showConfirm({title,message,okText='OK',cancelText='キャンセル',danger=false}){
+  return new Promise(resolve=>{
+    const ov=$('modal-overlay'),card=$('modal-card');
+    $('modal-title').textContent=title; $('modal-message').textContent=message;
+    $('modal-ok').textContent=okText; $('modal-cancel').textContent=cancelText;
+    $('modal-icon').textContent=danger?'⚠️':'❓'; card.classList.toggle('is-danger',danger);
+    ov.classList.remove('hidden');
+    const done=v=>{ov.classList.add('hidden');cleanup();resolve(v);};
+    const onOk=()=>done(true),onCancel=()=>done(false),onBg=e=>{if(e.target===ov)done(false);};
+    function cleanup(){$('modal-ok').removeEventListener('click',onOk);$('modal-cancel').removeEventListener('click',onCancel);ov.removeEventListener('click',onBg);}
+    $('modal-ok').addEventListener('click',onOk);$('modal-cancel').addEventListener('click',onCancel);ov.addEventListener('click',onBg);
+  });
+}
+
+/* ===== 手書き計算メモ（Canvas 2D + Pointer Events） ===== */
+function initMemo(){
+  const canvas=$('memo-canvas'); if(!canvas) return;
+  const ctx=canvas.getContext('2d');
+  let drawing=false, last=null;
+  function resize(){
+    const r=canvas.getBoundingClientRect();
+    if(r.width<=0||r.height<=0) return;
+    const dpr=window.devicePixelRatio||1;
+    canvas.width=Math.round(r.width*dpr); canvas.height=Math.round(r.height*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.lineWidth=2.5; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.strokeStyle='#334155';
+  }
+  function pos(e){ const r=canvas.getBoundingClientRect(); return {x:e.clientX-r.left,y:e.clientY-r.top}; }
+  canvas.addEventListener('pointerdown',e=>{ drawing=true; last=pos(e); try{canvas.setPointerCapture(e.pointerId);}catch(_){} e.preventDefault(); });
+  canvas.addEventListener('pointermove',e=>{ if(!drawing) return; const p=pos(e); ctx.beginPath(); ctx.moveTo(last.x,last.y); ctx.lineTo(p.x,p.y); ctx.stroke(); last=p; e.preventDefault(); });
+  const stop=()=>{ drawing=false; last=null; };
+  canvas.addEventListener('pointerup',stop); canvas.addEventListener('pointercancel',stop); canvas.addEventListener('pointerleave',stop);
+  $('memo-clear').addEventListener('click',()=>{ ctx.clearRect(0,0,canvas.width,canvas.height); });
+  window.addEventListener('resize',resize);
+  window.clearMemo=()=>{ resize(); };
+  resize();
+}
 
 /* ===== 起動 ===== */
 function boot(){
   renderHome();
+  initMemo();
   if(window.customElements&&customElements.whenDefined){
     customElements.whenDefined('math-field').then(()=>forceHalfWidth(mf())).catch(()=>{});
   }
