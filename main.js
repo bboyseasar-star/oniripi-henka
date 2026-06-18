@@ -1,4 +1,4 @@
-// main.js ── 鬼リピ 変化の割合マスター
+// main.js ── 変化の割合マスター
 'use strict';
 (function(){
 
