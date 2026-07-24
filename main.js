@@ -315,6 +315,7 @@ function initMemo(){
 function boot(){
   renderHome();
   initMemo();
+  window.addEventListener('load',()=>typeset());
   if(window.customElements&&customElements.whenDefined){
     customElements.whenDefined('math-field').then(()=>forceHalfWidth(mf())).catch(()=>{});
   }

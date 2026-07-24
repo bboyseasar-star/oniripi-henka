@@ -93,7 +93,7 @@ function genLevel2(){
       `\\(x\\)の増加量 ＝ ${x2}−(${x1}) ＝ ${dx}。\\(y\\)の増加量も同じように計算しよう。`,
       `答えは \\( ${ratLatex(sp,sq)} \\)`
     ],
-    solution:`変化の割合 ＝ (\\(y\\)の増加量)/(\\(x\\)の増加量) ＝ \\( ${ratLatex(sp,sq)} \\)`
+    solution:`変化の割合 ＝ \\(\\dfrac{\\text{yの増加量}}{\\text{xの増加量}}=${ratLatex(sp,sq)}\\)`
   };
 }
 
@@ -145,7 +145,7 @@ function genLevel3(){
         `\\(y\\)の増加量 ＝ ${y2}−${y1} ＝ ${dy}、\\(x\\)の増加量 ＝ ${dx}。`,
         `答えは \\( ${ratLatex(dy,dx)} \\)`
       ],
-      solution:`\\(x=${x1}\\)で\\(y=${y1}\\)、\\(x=${x2}\\)で\\(y=${y2}\\)。変化の割合 ＝ ${dy}/${dx} ＝ \\( ${ratLatex(dy,dx)} \\)`
+    solution:`\\(x=${x1}\\)で\\(y=${y1}\\)、\\(x=${x2}\\)で\\(y=${y2}\\)。変化の割合 ＝ \\( ${ratLatex(dy,dx)} \\)`
     };
   }
 }
