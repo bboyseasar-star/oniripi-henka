@@ -112,9 +112,17 @@ function loadQuestion(){
   $('q-counter').textContent=`Q ${idx+1} / ${session.length}`;
   $('progress-fill').style.width = (idx/session.length*100)+'%';
   $('score-display').textContent=score+'点';
-  $('question-label').innerHTML=q.label;
-  $('question-display').innerHTML=q.display;
-  $('question-extra').innerHTML=q.extra||'';
+  const questionCard=$('question-label').closest('.question-card');
+  questionCard.classList.toggle('context-mode',Boolean(q.context));
+  if(q.context){
+    $('question-label').innerHTML=`<span class="context-kicker">状況</span><span>${q.context}</span>`;
+    $('question-display').innerHTML=q.display;
+    $('question-extra').innerHTML=`<p class="context-question"><span class="context-kicker">問い</span><span>${q.label}</span></p>${q.extra||''}`;
+  }else{
+    $('question-label').innerHTML=q.label;
+    $('question-display').innerHTML=q.display;
+    $('question-extra').innerHTML=q.extra||'';
+  }
   $('feedback-box').className='feedback-box hidden';
   resetHints();
   $('hint-btn').classList.remove('hidden');

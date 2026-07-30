@@ -17,14 +17,14 @@ body{
 }
 .screen{display:none;width:100vw;height:100vh;padding:2vh 2vw}
 .screen.active{display:flex;align-items:center;justify-content:center;flex-direction:column}
-button{font-family:var(--font-family);cursor:pointer;border:none}
+button{font-family:var(--font-family);cursor:pointer;border:none;min-height:44px}
 b,strong{font-weight:700}
 
 /* ── start ── */
 .start-card{
   background:var(--card);border-radius:24px;box-shadow:var(--shadow);
-  padding:3vh 3vw;width:min(560px,92vw);max-height:96vh;
-  display:flex;flex-direction:column;align-items:center;gap:1.6vh;
+  padding:2.4vh 3vw;width:min(620px,92vw);max-height:96vh;
+  display:flex;flex-direction:column;align-items:center;gap:1.2vh;
   border:2px solid var(--line);
 }
 .app-logo{font-size:7vh;line-height:1}
@@ -32,13 +32,13 @@ b,strong{font-weight:700}
 .app-subtitle{font-size:2.4vh;color:var(--muted);font-weight:700;margin-top:-1vh}
 .level-select{width:100%}
 .level-label{text-align:center;color:var(--muted);font-size:1.8vh;margin-bottom:1vh}
-.level-btns{display:flex;gap:2vw}
+.level-btns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1vh 1vw}
 .level-btn{
-  flex:1;background:var(--bg);border:2px solid var(--line);border-radius:14px;
-  padding:1.4vh 0;display:flex;flex-direction:column;align-items:center;gap:.3vh;transition:.15s;
+  min-height:7vh;background:var(--bg);border:2px solid var(--line);border-radius:14px;
+  padding:.8vh .4vw;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2vh;transition:.15s;
 }
-.level-btn b{font-size:2.4vh;color:var(--fire)}
-.level-btn span{font-size:1.5vh;color:var(--muted)}
+.level-btn b{font-size:2.1vh;color:var(--fire)}
+.level-btn span{font-size:1.45vh;line-height:1.25;color:var(--muted)}
 .level-btn.active{background:linear-gradient(135deg,var(--fire),var(--fire2));border-color:transparent;box-shadow:var(--shadow)}
 .level-btn.active b,.level-btn.active span{color:#fff}
 .highscore-box{
@@ -87,6 +87,13 @@ b,strong{font-weight:700}
 .question-label{font-size:2vh;color:var(--muted);font-weight:700;margin-bottom:1vh}
 .equation-display{font-size:3.6vh;color:var(--ink);min-height:5vh}
 .question-extra{margin-top:1vh;font-size:2vh;overflow-x:auto}
+.question-note{font-size:1.6vh;color:var(--muted)}
+.question-card.context-mode{padding:1.6vh 2vw}
+.question-card.context-mode .question-label{display:flex;align-items:flex-start;gap:.8vw;text-align:left;font-size:1.85vh;line-height:1.6;color:var(--ink);font-weight:400}
+.question-card.context-mode .equation-display{font-size:3.2vh;min-height:4vh;margin:.4vh 0}
+.context-kicker{display:inline-block;flex:none;background:var(--bg2);color:var(--ember);border-radius:999px;padding:.2vh .7vw;font-size:1.35vh;font-weight:700;line-height:1.5}
+.context-question{display:flex;align-items:flex-start;gap:.8vw;background:var(--bg);border-left:4px solid var(--fire);border-radius:8px;padding:.9vh 1vw;font-size:1.95vh;font-weight:700;line-height:1.45;text-align:left;color:var(--ink)}
+.context-note{margin-top:.6vh;font-size:1.45vh;color:var(--muted);text-align:left}
 .q-table{margin:1vh auto;border-collapse:collapse;font-size:2.2vh}
 .q-table td{border:2px solid var(--line);padding:.6vh 1.4vw;text-align:center;min-width:3vw}
 .q-table tr:first-child td{background:var(--bg2);color:var(--muted);font-weight:700}
@@ -183,7 +190,7 @@ math-field::part(virtual-keyboard-toggle),math-field::part(menu-toggle){display:
 .memo-area{display:flex;flex-direction:column;gap:.6vh;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:1vh 1.2vw;min-height:0;flex:1 1 auto;overflow:hidden;}
 .memo-head{display:flex;align-items:center;justify-content:space-between}
 .memo-label{font-size:1.6vh;font-weight:700;color:var(--fire)}
-.memo-clear{background:var(--bg2);color:var(--muted);border:1px solid var(--line);border-radius:10px;padding:.4vh 1.2vw;font-size:1.4vh;font-weight:700;font-family:var(--font-family);cursor:pointer;min-height:32px;}
+.memo-clear{background:var(--bg2);color:var(--muted);border:1px solid var(--line);border-radius:10px;padding:.4vh 1.2vw;font-size:1.4vh;font-weight:700;font-family:var(--font-family);cursor:pointer;min-height:44px;}
 .memo-clear:hover{border-color:var(--fire);color:var(--fire)}
 .memo-canvas{width:100%;flex:1 1 0;min-height:0;display:block;touch-action:none;border-radius:10px;background:repeating-linear-gradient(to bottom,transparent 0,transparent 27px,var(--line) 27px,var(--line) 28px),var(--bg);cursor:crosshair;}
 .emoji-icon{font-family:"Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif!important;font-weight:400!important;font-style:normal}
